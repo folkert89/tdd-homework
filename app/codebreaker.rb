@@ -4,12 +4,11 @@ class Codebreaker
 
     def initialize(output)
       @output = output
-      @feedback = ""
+      @feedback = {}
     end
 
     def start(secret_number)
       @secret_number = secret_number
-
       output.puts "Welcome to Codebreaker"
       output.puts "Enter guess:"
       guess(gets.chomp)
@@ -27,19 +26,31 @@ class Codebreaker
     def check_for_plus(input)
       input.split("").each_with_index do |number, index|
         if @secret_number[index] == number
-          @feedback += "+"
+          @feedback[index] = number
         end
       end
+      @plus_count = @feedback.count
+      p @plus_count
     end
 
     def check_for_min(input)
       input.split("").each_with_index do |number, index|
         if ((@secret_number.split("").include? number) && (@secret_number[index] != number))
-          @feedback += "-"
+          validation_rules(number, index)
         end
       end
-      output.puts @feedback
+      translate_feedback
     end
 
+    def validation_rules(number, index)
+      if !@feedback.has_value? number
+        @feedback[index] = number
+      end
+    end
+
+    def translate_feedback
+      @min_count = @feedback.count - @plus_count
+      output.puts "+"*@plus_count + "-"*@min_count
+    end
   end
 end
