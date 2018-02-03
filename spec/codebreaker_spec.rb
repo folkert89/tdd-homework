@@ -2,8 +2,8 @@ require 'spec_helper'
 require 'codebreaker' # load the file in app/codebreaker.rb
 
 RSpec.describe Codebreaker do
-  let(:game)    { Codebreaker::Game.new(output) }
-  let(:output)  { double('output').as_null_object } # dont touch this
+  let(:game)          { Codebreaker::Game.new(output) }
+  let(:output)        { double('output').as_null_object } # dont touch this
 
   context "when I start playing" do
     let(:secret_number) { '1234' }
@@ -231,6 +231,31 @@ RSpec.describe Codebreaker do
         input = '4444'
         expect(output).to receive(:puts).with('+')
 
+        game.guess(input)
+      end
+    end
+
+    context "[Folkert] feedback" do
+      let(:secret_number) { '5322' }
+      it "should be cleared after each guess" do
+        game.start(secret_number)
+        input = '5322'
+        expect(output).to receive(:puts).with('++++')
+
+        game.guess(input)
+
+        expect(output).to receive(:puts).with('+++')
+
+        game.guess('5321')
+      end
+    end
+
+    context "[Folkert] secret number" do
+      it "should be generated randomly if not passed" do
+        game.start(nil)
+        input = game.secret_number
+
+        expect(output).to receive(:puts).with('++++')
         game.guess(input)
       end
     end

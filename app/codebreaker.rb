@@ -3,7 +3,9 @@ require 'humanize'
 class Codebreaker
   class Game
     DEFAULT_NUMBER_OF_DIGITS_REQUIRED = 4
+
     attr_reader :output
+    attr_reader :secret_number
 
     def initialize(output)
       @output = output
@@ -62,6 +64,8 @@ class Codebreaker
 
     def print_feedback
       output.puts "+"*@plus_count + "-"*@min_count
+      # clear feedback
+      @feedback = {}
     end
 
     def random_secret_number
