@@ -1,5 +1,8 @@
+require 'humanize'
+
 class Codebreaker
   class Game
+    DEFAULT_NUMBER_OF_DIGITS_REQUIRED = 4
     attr_reader :output
 
     def initialize(output)
@@ -7,50 +10,68 @@ class Codebreaker
       @feedback = {}
     end
 
-    def start(secret_number)
-      @secret_number = secret_number
+    def start(secret_number, number_of_digits_in_secret = DEFAULT_NUMBER_OF_DIGITS_REQUIRED)
+      @number_of_digits_in_secret = number_of_digits_in_secret
+      @secret_number = secret_number || random_secret_number
+
       output.puts "Welcome to Codebreaker"
       output.puts "Enter guess:"
       guess(gets.chomp)
     end
 
     def guess(input)
-      if input.length != 4
-        output.puts "Try guessing a number with four digits"
-      else
-        check_for_plus(input)
-        check_for_min(input)
+      @input = input
+      if @input.length != @number_of_digits_in_secret
+        output.puts "Try guessing a number with #{@number_of_digits_in_secret.humanize} digits"
+        return
       end
+
+      conduct_checks
     end
 
-    def check_for_plus(input)
-      input.split("").each_with_index do |number, index|
+    private
+    def conduct_checks
+      check_for_plus
+      check_for_min
+      print_feedback
+    end
+
+    def check_for_plus
+      @input.split("").each_with_index do |number, index|
         if @secret_number[index] == number
           @feedback[index] = number
         end
       end
       @plus_count = @feedback.count
-      p @plus_count
     end
 
-    def check_for_min(input)
-      input.split("").each_with_index do |number, index|
-        if ((@secret_number.split("").include? number) && (@secret_number[index] != number))
-          validation_rules(number, index)
+    def check_for_min
+      @input.split("").each_with_index do |number, index|
+        if (@secret_number.split("").include?(number) && @secret_number[index] != number)
+          handle_ambiguous_cases(number, index)
         end
       end
-      translate_feedback
+      @min_count = @feedback.count - @plus_count
     end
 
-    def validation_rules(number, index)
+    def handle_ambiguous_cases(number, index)
       if !@feedback.has_value? number
         @feedback[index] = number
       end
     end
 
-    def translate_feedback
-      @min_count = @feedback.count - @plus_count
+    def print_feedback
       output.puts "+"*@plus_count + "-"*@min_count
+    end
+
+    def random_secret_number
+      secret_number = ""
+      @number_of_digits_in_secret.times {
+        digit = rand(9)
+        secret_number += digit.to_s
+      }
+
+      secret_number
     end
   end
 end
