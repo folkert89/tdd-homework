@@ -63,8 +63,12 @@ class Codebreaker
     end
 
     def print_feedback
-      output.puts "+"*@plus_count + "-"*@min_count
-      # clear feedback
+      output.puts "+" * @plus_count + "-" * @min_count
+
+      clear_feedback
+    end
+
+    def clear_feedback
       @feedback = {}
     end
 
