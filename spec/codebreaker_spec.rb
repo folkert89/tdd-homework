@@ -259,5 +259,15 @@ RSpec.describe Codebreaker do
         game.guess(input)
       end
     end
+
+    context "[Folkert] wrong formatted input" do
+      it "prints guidance message" do
+        game.start(1234)
+        expect(output).to receive(:puts).with("Try guessing a number with four digits").twice
+
+        game.guess('33a3')
+        game.guess('abcd')
+      end
+    end
   end
 end

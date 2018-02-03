@@ -35,7 +35,7 @@ class Codebreaker
 
     def guess(input)
       @input = input
-      unless @input.length == @number_of_digits_in_secret
+      if @input.length != @number_of_digits_in_secret || !@input.match(/^(\d)+$/)
         output.puts "Try guessing a number with #{@number_of_digits_in_secret.humanize} digits"
         return
       end
