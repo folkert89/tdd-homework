@@ -62,6 +62,8 @@ class Codebreaker
 
     def print_feedback
       output.puts "+"*@plus_count + "-"*@min_count
+      # clear feedback
+      @feedback = {}
     end
 
     def random_secret_number

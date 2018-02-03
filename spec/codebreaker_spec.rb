@@ -234,5 +234,20 @@ RSpec.describe Codebreaker do
         game.guess(input)
       end
     end
+
+    context "[Folkert] feedback" do
+      let(:secret_number) { '5322' }
+      it "should be cleared after each guess" do
+        game.start(secret_number)
+        input = '5322'
+        expect(output).to receive(:puts).with('++++')
+
+        game.guess(input)
+
+        expect(output).to receive(:puts).with('+++')
+
+        game.guess('5321')
+      end
+    end
   end
 end
