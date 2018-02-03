@@ -21,13 +21,3 @@ class Codebreaker
     end
   end
 end
-
-g = Codebreaker::Game.new(STDOUT)
-
-str = ""
-4.times {
-  i = rand(9)
-  str += i.to_s
-}
-
-g.start(str)
