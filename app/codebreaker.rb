@@ -19,25 +19,26 @@ class Codebreaker
       if input.length != 4
         output.puts "Try guessing a number with four digits"
       else
-        loop_answer(input)
+        check_for_plus(input)
+        check_for_min(input)
       end
     end
 
-    def loop_answer(input)
+    def check_for_plus(input)
       input.split("").each_with_index do |number, index|
-        if @secret_number.split("").include? number
-          check_answer(number, index)
+        if @secret_number[index] == number
+          @feedback += "+"
+        end
+      end
+    end
+
+    def check_for_min(input)
+      input.split("").each_with_index do |number, index|
+        if ((@secret_number.split("").include? number) && (@secret_number[index] != number))
+          @feedback += "-"
         end
       end
       output.puts @feedback
-    end
-
-    def check_answer(number, index)
-      if @secret_number[index] == number
-        @feedback += "+"
-      else
-        @feedback += "-"
-      end
     end
 
   end
