@@ -1,6 +1,18 @@
 require 'humanize'
 
 class Codebreaker
+  class RandomSecretGenerator
+    def self.random_secret_number(number_of_digits_in_secret)
+      secret_number = ""
+      number_of_digits_in_secret.times {
+        digit = rand(9)
+        secret_number += digit.to_s
+      }
+
+      secret_number
+    end
+  end
+
   class Game
     DEFAULT_NUMBER_OF_DIGITS_REQUIRED = 4
 
@@ -14,7 +26,7 @@ class Codebreaker
 
     def start(secret_number, number_of_digits_in_secret = DEFAULT_NUMBER_OF_DIGITS_REQUIRED)
       @number_of_digits_in_secret = number_of_digits_in_secret
-      @secret_number = secret_number || random_secret_number
+      @secret_number = secret_number || RandomSecretGenerator.random_secret_number(number_of_digits_in_secret)
 
       output.puts "Welcome to Codebreaker"
       output.puts "Enter guess:"
@@ -23,7 +35,7 @@ class Codebreaker
 
     def guess(input)
       @input = input
-      if @input.length != @number_of_digits_in_secret
+      unless @input.length == @number_of_digits_in_secret
         output.puts "Try guessing a number with #{@number_of_digits_in_secret.humanize} digits"
         return
       end
@@ -70,16 +82,6 @@ class Codebreaker
 
     def clear_feedback
       @feedback = {}
-    end
-
-    def random_secret_number
-      secret_number = ""
-      @number_of_digits_in_secret.times {
-        digit = rand(9)
-        secret_number += digit.to_s
-      }
-
-      secret_number
     end
   end
 end
