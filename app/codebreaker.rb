@@ -28,13 +28,11 @@ class Codebreaker
       input.split("").each_with_index do |number, index|
         if @secret_number[index] == number
           @feedback += "+"
-          p "raak"
         end
       end
     end
 
     def check_for_min(input)
-      p input
       input.split("").each_with_index do |number, index|
         if ((@secret_number.split("").include? number) && (@secret_number[index] != number))
           @feedback += "-"
